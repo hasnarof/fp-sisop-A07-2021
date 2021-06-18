@@ -1,10 +1,7 @@
 // Client side C/C++ program to demonstrate Socket programming
-#include <stdio.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <string.h>
-#define PORT 8080
+#include "_includean.c"
+
+char permission[STR_SIZE]; // enum: "root", "user";
 
 int main(int argc, char const *argv[])
 {
@@ -33,6 +30,47 @@ int main(int argc, char const *argv[])
 		printf("\nConnection Failed \n");
 		return -1;
 	}
+
+    char command[STR_SIZE], username[STR_SIZE], password[STR_SIZE], response[STR_SIZE];
+
+
+	if (getuid()) { // not root
+		strcpy(permission,"user");
+		send(sock, permission, STR_SIZE, 0);
+
+		strcpy(username, argv[2]);
+		strcpy(password, argv[4]);
+		send(sock, username, STR_SIZE, 0);
+		send(sock, password, STR_SIZE, 0);
+
+		memset(response, 0, sizeof(response));
+		valread = read(sock, response, STR_SIZE);
+		printf("%s\n", response);
+
+		exit(0);
+
+		if (equal(buffer, "Login success")) {
+			// while (true) {
+			// }
+			"berhasil login";
+			exit(EXIT_SUCCESS);
+		}	
+
+
+
+	} else {
+		strcpy(permission, "root");
+		send(sock, permission, STR_SIZE, 0);
+
+		
+	}
+	
+
+	
+
+	
+
+	/* ----------------------------- */
 	send(sock , hello , strlen(hello) , 0 );
 	printf("Hello message sent\n");
 	valread = read( sock , buffer, 1024);
